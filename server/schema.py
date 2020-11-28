@@ -8,8 +8,7 @@ class Query(CoreSchema.Query, graphene.ObjectType):
     pass
 
 
-class Mutation(CoreSchema.schema.Mutation,
-               graphene.ObjectType):
+class Mutation(CoreSchema.Mutation, graphene.ObjectType):
     # This class will inherit from multiple Queries
     # as we begin to add more apps to our project
     pass
