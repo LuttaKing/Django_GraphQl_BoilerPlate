@@ -1,6 +1,6 @@
 import graphene
 from graphene_django.types import DjangoObjectType
-from core.models import Movie
+from core.models import Movie, Actor
 
 
 class MovieType1(DjangoObjectType):
@@ -11,7 +11,9 @@ class MovieType1(DjangoObjectType):
 
 class MovieInput(graphene.InputObjectType):
     id = graphene.ID()
+    title = graphene.String()
     year = graphene.Int()
+    actor_id = graphene.ID(required=True)
 
 
 class CreateMovie(graphene.Mutation):
@@ -24,9 +26,11 @@ class CreateMovie(graphene.Mutation):
     @staticmethod
     def mutate(root, info, input=None):
         ok = True
+        actor_instance = Actor.objects.get(id=input.actor_id)
         movie_instance = Movie(
             title=input.title,
-            year=input.year
+            year=input.year,
+            actor=actor_instance,
         )
         movie_instance.save()
         return CreateMovie(ok=ok, movie=movie_instance)

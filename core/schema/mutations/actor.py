@@ -1,6 +1,7 @@
 import graphene
 from graphene_django.types import DjangoObjectType
 from core.models import Actor
+from graphene_file_upload.scalars import Upload
 
 
 class ActorType1(DjangoObjectType):
@@ -11,6 +12,7 @@ class ActorType1(DjangoObjectType):
 class ActorInput(graphene.InputObjectType):
     id = graphene.ID()
     name = graphene.String()
+    pic = Upload(required=True)
 
 
 class CreateActor(graphene.Mutation):
@@ -23,7 +25,7 @@ class CreateActor(graphene.Mutation):
     @staticmethod
     def mutate(root, info, input=None):
         ok = True
-        actor_instance = Actor(name=input.name)
+        actor_instance = Actor(name=input.name, pic=input.pic)
         actor_instance.save()
         return CreateActor(ok=ok, actor=actor_instance)
 
